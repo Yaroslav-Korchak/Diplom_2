@@ -26,7 +26,7 @@ def create_and_delete_user():
     login_data.pop("name")
     response = requests.post(Links.register_url, data=payload)
     access_token = response.json()["accessToken"]
-    yield response, login_data, access_token
+    yield response, payload, login_data, access_token
     requests.delete(Links.user_url, headers={'Authorization': access_token})
 
 
