@@ -7,14 +7,14 @@ import string
 
 @pytest.fixture
 def create_and_delete_user():
-    def generate_random_string(length):
+    def random_generator(length):
         letters = string.ascii_lowercase
         random_string = ''.join(random.choice(letters) for i in range(length))
         return random_string
 
-    name = generate_random_string(10)
-    email = generate_random_string(10)+'@yandex.ru'
-    password = generate_random_string(10)
+    name = random_generator(10)
+    email = random_generator(10)+'@yandex.ru'
+    password = random_generator(10)
 
     payload = {
         "name": name,

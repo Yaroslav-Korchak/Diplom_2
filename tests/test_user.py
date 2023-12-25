@@ -1,7 +1,10 @@
 import pytest
 import allure
 import requests
+
+import helpers.helpers
 from data.data import *
+from helpers.helpers import *
 
 
 class TestCreateUser:
@@ -12,11 +15,10 @@ class TestCreateUser:
 
     @allure.title('Проверка создания пользователя с уже существующими данными')
     def test_create_already_existing_user(self, create_and_delete_user):
-        already_existing_user = create_and_delete_user[1]
-        response = requests.post(Links.register_url, data=already_existing_user)
+        response = requests.post(Links.register_url, data=create_and_delete_user[1])
         assert response.status_code == 403 and response.json()['message'] == "User already exists"
 
-    @allure.title('Проверка создания пользователя без проверки обязательных полей')
+    @allure.title('Проверка создания пользователя без обязательных полей')
     @pytest.mark.parametrize('payload', (
     UserWithoutRequiredFields.no_name, UserWithoutRequiredFields.empty_name, UserWithoutRequiredFields.no_password,
     UserWithoutRequiredFields.empty_password, UserWithoutRequiredFields.no_email, UserWithoutRequiredFields.empty_email))
@@ -24,3 +26,16 @@ class TestCreateUser:
         response = requests.post(Links.register_url, data=payload)
 
         assert response.status_code == 403 and response.json()['message'] == "Email, password and name are required fields"
+
+
+class TestLoginUser:
+    @allure.title('Проверка успешной авторизации пользователя')
+    def test_user_login_success(self, create_and_delete_user):
+        response = requests.post(Links.login_url, data=create_and_delete_user[2])
+        assert response.status_code == 200 and response.json()['success'] == True
+
+    @allure.title('Проверка авторизации с несуществующими кредами')
+    def test_login_user_not_exist(self, create_and_delete_user):
+        payload = {"email": helpers.helpers.email, "password": helpers.helpers.password}
+        response = requests.post(Links.login_url, data=payload)
+        assert response.status_code == 401 and response.json()['message'] == "email or password are incorrect"
