@@ -14,3 +14,16 @@ class UserWithoutRequiredFields:
     empty_password = {"email": "milleniumfalcon@yandex.ru", "password": "", "name": "Chubaka"}
 
 
+class TestOrder:
+    successful_order = {
+  "ingredients": [
+    "61c0c5a71d1f82001bdaaa6e",
+    "61c0c5a71d1f82001bdaaa76",
+    "61c0c5a71d1f82001bdaaa7a",
+    "61c0c5a71d1f82001bdaaa74",
+    "61c0c5a71d1f82001bdaaa6c"
+  ]
+}
+    bad_order = {"ingredients":  ["bad_ingredient"]}
+
+
